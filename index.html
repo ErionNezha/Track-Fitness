@@ -78,18 +78,17 @@ footer strong{color:#9fb3c8}
 const FILES=["src/track_fitness/Track_Fitness.java", "src/track_fitness/Databasecon.java", "src/track_fitness/FXMLController.java", "src/track_fitness/data.java"];
 
 function hl(code,lang){
-  code=code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  const pats={
-    kw:/\b(import|from|as|def|return|if|elif|else|for|while|in|not|and|or|class|try|except|finally|with|lambda|pass|break|continue|print|public|private|protected|static|void|int|float|double|char|long|short|boolean|new|this|null|true|false|extends|implements|package|throws|struct|include|switch|case|default|do|sizeof|typedef|const|unsigned|using|namespace|cin|cout|endl|int main|string|System|out|println|var|let|function|=>)\b/g,
-    st:/(&quot;.*?&quot;|&#39;.*?&#39;|"[^"\n]*"|'[^'\n]*')/g,
-    cm:/(\/\/[^\n]*|\/\*[\s\S]*?\*\/|#[^\n]*|&lt;!--[\s\S]*?--&gt;)/g,
-    nm:/\b(\d+(\.\d+)?)\b/g
-  };
-  code=code.replace(pats.cm,'<span class="cm">$1</span>')
-           .replace(pats.st,'<span class="st">$1</span>')
-           .replace(pats.kw,'<span class="kw">$1</span>')
-           .replace(pats.nm,'<span class="nm">$1</span>');
-  return code.split('\n').map((l,i)=>'<span class="lineno">'+(i+1)+'</span>'+(l||' ')).join('\n');
+  const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const tok=/(\/\/[^\n]*|\/\*[\s\S]*?\*\/|#[^\n]*|<!--[\s\S]*?-->)|("[^"\n]*"|'[^'\n]*')|\b(import|from|as|def|return|if|elif|else|for|while|in|not|and|or|class|try|except|finally|with|lambda|pass|break|continue|print|public|private|protected|static|void|int|float|double|char|long|short|boolean|new|this|null|true|false|extends|implements|package|throws|struct|include|switch|case|default|do|sizeof|typedef|const|unsigned|using|namespace|cin|cout|endl|int main|string|System|out|println|var|let|function|=>)\b|\b(\d+(\.\d+)?)\b/g;
+  let out='',last=0,m;
+  while((m=tok.exec(code))!==null){
+    out+=esc(code.slice(last,m.index));
+    const cls=m[1]?'cm':m[2]?'st':m[3]?'kw':'nm';
+    out+='<span class="'+cls+'">'+esc(m[0])+'</span>';
+    last=m.index+m[0].length;
+  }
+  out+=esc(code.slice(last));
+  return out.split('\n').map((l,i)=>'<span class="lineno">'+(i+1)+'</span>'+(l||' ')).join('\n');
 }
 
 
