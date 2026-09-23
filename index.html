@@ -76,6 +76,7 @@ footer strong{color:#9fb3c8}
 <footer>Krijuar nga <strong>Erion Nezha</strong> — © 2026</footer>
 <script>
 const FILES=["src/track_fitness/Track_Fitness.java", "src/track_fitness/Databasecon.java", "src/track_fitness/FXMLController.java", "src/track_fitness/data.java"];
+const CODEDIR="demo";
 
 function hl(code,lang){
   const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -117,7 +118,7 @@ window.onload=()=>{replay();};
 async function openTab(path,el){
   document.querySelectorAll('.ctab').forEach(e=>e.classList.remove('active'));el.classList.add('active');
   const box=document.getElementById('codebox');
-  try{const r=await fetch('original/'+path);const txt=await r.text();
+  try{const r=await fetch(CODEDIR+'/'+path);const txt=await r.text();
     box.innerHTML='<pre>'+hl(txt,path.split('.').pop())+'</pre>';
   }catch(e){box.innerHTML='<pre>Deshtoi leximi i file-it.</pre>';}
 }
